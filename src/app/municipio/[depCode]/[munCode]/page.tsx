@@ -171,7 +171,7 @@ export default async function MunicipalityPage({ params }: Props) {
               </tr>
             </thead>
             <tbody>
-              {mun.candidateResults.map((c, i) => {
+              {mun.candidateResults.map((c: import('@/types').CandidateResult, i: number) => {
                 const isCepeda = c.candidateCedula === '79262397'
                 const isEspriella = c.candidateCedula === '11004242'
                 return (
