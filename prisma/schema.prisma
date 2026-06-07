@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Department {
+  id                  Int            @id @default(autoincrement())
+  code                Int            @unique
+  name                String
+  totalMunicipalities Int
+  totalHombres        Int
+  totalMujeres        Int
+  totalPotencial      Int
+  totalMesas          Int
+  totalPuestos        Int
+  cepedaVotes         Int            @default(0)
+  espriellaVotes      Int            @default(0)
+  totalEmitted        Int            @default(0)
+  blankVotes          Int            @default(0)
+  nullVotes           Int            @default(0)
+  participationPct    Float          @default(0)
+  winnerName          String?
+  winnerVotes         Int            @default(0)
+  secondName          String?
+  secondVotes         Int            @default(0)
+  margin              Int            @default(0)
+  marginPct           Float          @default(0)
+
+  municipalities Municipality[]
+}
+
+model Municipality {
+  id               Int               @id @default(autoincrement())
+  departmentCode   Int
+  municipalityCode String
+  name             String
+  hombres          Int               @default(0)
+  mujeres          Int               @default(0)
+  totalPotencial   Int               @default(0)
+  mesas            Int               @default(0)
+  puestos          Int               @default(0)
+  cepedaVotes      Int               @default(0)
+  espriellaVotes   Int               @default(0)
+  totalEmitted     Int               @default(0)
+  blankVotes       Int               @default(0)
+  nullVotes        Int               @default(0)
+  participationPct Float             @default(0)
+  winnerName       String?
+  winnerVotes      Int               @default(0)
+  secondName       String?
+  secondVotes      Int               @default(0)
+  margin           Int               @default(0)
+  marginPct        Float             @default(0)
+
+  department       Department        @relation(fields: [departmentCode], references: [code])
+  candidateResults CandidateResult[]
+
+  @@unique([departmentCode, municipalityCode])
+  @@index([departmentCode])
+}
+
+model CandidateResult {
+  id               Int          @id @default(autoincrement())
+  municipalityId   Int
+  candidateName    String
+  partyName        String
+  candidateCedula  String
+  votes            Int
+  pct              Float        @default(0)
+
+  municipality Municipality @relation(fields: [municipalityId], references: [id])
+
+  @@unique([municipalityId, candidateCedula])
+  @@index([municipalityId])
+  @@index([candidateCedula])
+}
