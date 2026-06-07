@@ -7,6 +7,7 @@ import ParticipationCard from '@/components/dashboard/ParticipationCard'
 import VoteDonut from '@/components/dashboard/VoteDonut'
 import StatCard from '@/components/ui/StatCard'
 import { formatNumber, formatPct } from '@/lib/utils'
+import type { CandidateResult } from '@/types'
 
 interface Props {
   params: Promise<{ depCode: string; munCode: string }>
@@ -171,7 +172,7 @@ export default async function MunicipalityPage({ params }: Props) {
               </tr>
             </thead>
             <tbody>
-              {mun.candidateResults.map((c: import('@/types').CandidateResult, i: number) => {
+              {mun.candidateResults.map((c: CandidateResult, i: number) => {
                 const isCepeda = c.candidateCedula === '79262397'
                 const isEspriella = c.candidateCedula === '11004242'
                 return (
@@ -222,7 +223,7 @@ export default async function MunicipalityPage({ params }: Props) {
           <div>
             <p className="text-gray-500 text-xs">No marcados</p>
             <p className="text-gray-900 font-medium">
-              {formatNumber(mun.totalEmitted - mun.candidateResults.reduce((s, c) => s + c.votes, 0) - mun.blankVotes - mun.nullVotes)}
+              {formatNumber(mun.totalEmitted - mun.candidateResults.reduce((s: number, c: CandidateResult) => s + c.votes, 0) - mun.blankVotes - mun.nullVotes)}
             </p>
           </div>
         </div>
