@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { prisma } from '@/lib/prisma'
 import MapWrapper from '@/components/map/MapWrapper'
 import NationalStats from '@/components/dashboard/NationalStats'
