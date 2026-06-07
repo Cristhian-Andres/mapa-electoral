@@ -7,6 +7,10 @@ import SearchBox from '@/components/ui/SearchBox'
 import ResultsTable from '@/components/dashboard/ResultsTable'
 import type { DepartmentSummary, MunicipalitySummary } from '@/types'
 
+export type MunWithCandidates = MunicipalitySummary & {
+  candidateResults: { candidateName: string; votes: number }[]
+}
+
 async function getDepartments(): Promise<DepartmentSummary[]> {
   try {
     return await prisma.department.findMany({ orderBy: { name: 'asc' } })
@@ -16,7 +20,7 @@ async function getDepartments(): Promise<DepartmentSummary[]> {
   }
 }
 
-async function getMunicipalities(): Promise<MunicipalitySummary[]> {
+async function getMunicipalities(): Promise<MunWithCandidates[]> {
   try {
     return await prisma.municipality.findMany({
       select: {
@@ -28,6 +32,14 @@ async function getMunicipalities(): Promise<MunicipalitySummary[]> {
         winnerName: true, winnerVotes: true,
         secondName: true, secondVotes: true,
         margin: true, marginPct: true,
+        candidateResults: {
+          select: { candidateName: true, votes: true },
+          where: {
+            candidateName: {
+              in: ['PALOMA VALENCIA LASERNA', 'SERGIO FAJARDO VALDERRAMA'],
+            },
+          },
+        },
       },
       orderBy: { totalPotencial: 'desc' },
     })
@@ -77,7 +89,7 @@ export default async function HomePage() {
       {departments.length > 0 && (
         <div className="mt-8">
           <h2 className="text-gray-900 font-semibold text-lg mb-4">Resultados por Departamento y Municipio</h2>
-          <ResultsTable departments={departments} municipalities={municipalities} />
+          <ResultsTable departments={departments} municipalities={municipalities as MunWithCandidates[]} />
         </div>
       )}
     </div>
