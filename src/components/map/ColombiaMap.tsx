@@ -1,3 +1,4 @@
+// @ts-nocheck — react-simple-maps v3 types are incomplete (missing minZoom, maxZoom, onMouseEnter, onTouchStart)
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
