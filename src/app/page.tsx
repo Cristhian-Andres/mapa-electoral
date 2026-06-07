@@ -8,7 +8,8 @@ import type { DepartmentSummary, MunicipalitySummary } from '@/types'
 async function getDepartments(): Promise<DepartmentSummary[]> {
   try {
     return await prisma.department.findMany({ orderBy: { name: 'asc' } })
-  } catch {
+  } catch (e) {
+    console.error('[DB] getDepartments failed:', e)
     return []
   }
 }
@@ -28,7 +29,8 @@ async function getMunicipalities(): Promise<MunicipalitySummary[]> {
       },
       orderBy: { totalPotencial: 'desc' },
     })
-  } catch {
+  } catch (e) {
+    console.error('[DB] getMunicipalities failed:', e)
     return []
   }
 }
