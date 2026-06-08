@@ -44,6 +44,30 @@ export interface MunicipalitySummary {
   secondVotes: number
   margin: number
   marginPct: number
+  mesasTotal: number
+  mesasCepeda: number
+  mesasEspriella: number
+  mesasValencia: number
+  mesasFajardo: number
+}
+
+export interface PuestoResult {
+  id: number
+  municipalityId: number
+  puestoCode: string
+  puestoName: string
+  mesasTotal: number
+  mesasCepeda: number
+  mesasEspriella: number
+  mesasValencia: number
+  mesasFajardo: number
+  cepedaVotes: number
+  espriellaVotes: number
+  valenciaVotes: number
+  fajardoVotes: number
+  totalVotes: number
+  winnerName: string | null
+  winnerCedula: string | null
 }
 
 export interface CandidateResult {
@@ -58,6 +82,7 @@ export interface CandidateResult {
 
 export interface MunicipalityDetail extends MunicipalitySummary {
   candidateResults: CandidateResult[]
+  puestoResults: PuestoResult[]
 }
 
 export interface DepartmentDetail extends DepartmentSummary {

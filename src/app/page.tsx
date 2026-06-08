@@ -27,6 +27,8 @@ async function getMunicipalities(): Promise<MunWithCandidates[]> {
         id: true, departmentCode: true, municipalityCode: true, name: true,
         hombres: true, mujeres: true, totalPotencial: true,
         mesas: true, puestos: true,
+        mesasTotal: true, mesasCepeda: true, mesasEspriella: true,
+        mesasValencia: true, mesasFajardo: true,
         cepedaVotes: true, espriellaVotes: true, totalEmitted: true,
         blankVotes: true, nullVotes: true, participationPct: true,
         winnerName: true, winnerVotes: true,

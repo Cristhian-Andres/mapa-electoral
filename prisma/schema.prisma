@@ -55,11 +55,42 @@ model Municipality {
   margin           Int               @default(0)
   marginPct        Float             @default(0)
 
+  mesasTotal       Int               @default(0)
+  mesasCepeda      Int               @default(0)
+  mesasEspriella   Int               @default(0)
+  mesasValencia    Int               @default(0)
+  mesasFajardo     Int               @default(0)
+
   department       Department        @relation(fields: [departmentCode], references: [code])
   candidateResults CandidateResult[]
+  puestoResults    PuestoResult[]
 
   @@unique([departmentCode, municipalityCode])
   @@index([departmentCode])
+}
+
+model PuestoResult {
+  id             Int          @id @default(autoincrement())
+  municipalityId Int
+  puestoCode     String
+  puestoName     String
+  mesasTotal     Int          @default(0)
+  mesasCepeda    Int          @default(0)
+  mesasEspriella Int          @default(0)
+  mesasValencia  Int          @default(0)
+  mesasFajardo   Int          @default(0)
+  cepedaVotes    Int          @default(0)
+  espriellaVotes Int          @default(0)
+  valenciaVotes  Int          @default(0)
+  fajardoVotes   Int          @default(0)
+  totalVotes     Int          @default(0)
+  winnerName     String?
+  winnerCedula   String?
+
+  municipality   Municipality @relation(fields: [municipalityId], references: [id])
+
+  @@unique([municipalityId, puestoCode])
+  @@index([municipalityId])
 }
 
 model CandidateResult {

@@ -21,6 +21,9 @@ interface MunRow {
   espriella: number
   valencia: number
   fajardo: number
+  mesasCepeda: number
+  mesasEspriella: number
+  mesasTotal: number
   margin: number
   marginPct: number
   participationPct: number
@@ -37,6 +40,9 @@ interface DepRow {
   espriella: number
   valencia: number
   fajardo: number
+  mesasCepeda: number
+  mesasEspriella: number
+  mesasTotal: number
   margin: number
   marginPct: number
   participationPct: number
@@ -85,13 +91,19 @@ export default function ResultsTable({ departments, municipalities }: Props) {
   }, [departments])
 
   const depRows: DepRow[] = useMemo(() => {
-    const depValencia = new Map<number, number>()
-    const depFajardo = new Map<number, number>()
+    const depValencia       = new Map<number, number>()
+    const depFajardo        = new Map<number, number>()
+    const depMesasCepeda    = new Map<number, number>()
+    const depMesasEspriella = new Map<number, number>()
+    const depMesasTotal     = new Map<number, number>()
     municipalities.forEach(m => {
       const v = getVotes(m.candidateResults, 'VALENCIA')
       const f = getVotes(m.candidateResults, 'FAJARDO')
       depValencia.set(m.departmentCode, (depValencia.get(m.departmentCode) ?? 0) + v)
       depFajardo.set(m.departmentCode, (depFajardo.get(m.departmentCode) ?? 0) + f)
+      depMesasCepeda.set(m.departmentCode, (depMesasCepeda.get(m.departmentCode) ?? 0) + (m.mesasCepeda ?? 0))
+      depMesasEspriella.set(m.departmentCode, (depMesasEspriella.get(m.departmentCode) ?? 0) + (m.mesasEspriella ?? 0))
+      depMesasTotal.set(m.departmentCode, (depMesasTotal.get(m.departmentCode) ?? 0) + (m.mesasTotal ?? 0))
     })
     return departments.map(d => ({
       id: d.id, code: d.code, name: d.name,
@@ -99,6 +111,9 @@ export default function ResultsTable({ departments, municipalities }: Props) {
       cepeda: d.cepedaVotes, espriella: d.espriellaVotes,
       valencia: depValencia.get(d.code) ?? 0,
       fajardo: depFajardo.get(d.code) ?? 0,
+      mesasCepeda:    depMesasCepeda.get(d.code)    ?? 0,
+      mesasEspriella: depMesasEspriella.get(d.code) ?? 0,
+      mesasTotal:     depMesasTotal.get(d.code)     ?? 0,
       margin: d.margin, marginPct: d.marginPct,
       participationPct: d.participationPct,
       potencial: d.totalPotencial, winner: d.winnerName,
@@ -112,6 +127,9 @@ export default function ResultsTable({ departments, municipalities }: Props) {
       cepeda: m.cepedaVotes, espriella: m.espriellaVotes,
       valencia: getVotes(m.candidateResults, 'VALENCIA'),
       fajardo: getVotes(m.candidateResults, 'FAJARDO'),
+      mesasCepeda:    m.mesasCepeda    ?? 0,
+      mesasEspriella: m.mesasEspriella ?? 0,
+      mesasTotal:     m.mesasTotal     ?? 0,
       margin: m.margin, marginPct: m.marginPct,
       participationPct: m.participationPct,
       potencial: m.totalPotencial, winner: m.winnerName,
@@ -239,6 +257,8 @@ export default function ResultsTable({ departments, municipalities }: Props) {
                   <Th field="espriella" label="De la Espriella" className="text-red-600 text-right" />
                   <Th field="valencia"  label="Valencia"        className="text-green-600 text-right hidden xl:table-cell" />
                   <Th field="fajardo"   label="Fajardo"         className="text-violet-600 text-right hidden xl:table-cell" />
+                  <Th field="mesasCepeda"    label="Mesas C"    className="text-blue-500 text-right hidden xl:table-cell" />
+                  <Th field="mesasEspriella" label="Mesas E"    className="text-red-500 text-right hidden xl:table-cell" />
                   <Th field="marginPct"       label="Margen"  className="text-amber-600 text-right" />
                   <Th field="participationPct" label="Partic." className="text-gray-500 text-right" />
                   <th className="w-6" />
@@ -251,6 +271,8 @@ export default function ResultsTable({ departments, municipalities }: Props) {
                   <Th field="espriella" label="De la Espriella" className="text-red-600 text-right" />
                   <Th field="valencia"  label="Valencia"        className="text-green-600 text-right hidden xl:table-cell" />
                   <Th field="fajardo"   label="Fajardo"         className="text-violet-600 text-right hidden xl:table-cell" />
+                  <Th field="mesasCepeda"    label="Mesas C"    className="text-blue-500 text-right hidden xl:table-cell" />
+                  <Th field="mesasEspriella" label="Mesas E"    className="text-red-500 text-right hidden xl:table-cell" />
                   <Th field="marginPct"       label="Margen"  className="text-amber-600 text-right" />
                   <Th field="participationPct" label="Partic." className="text-gray-500 text-right" />
                   <th className="w-6" />
@@ -281,6 +303,14 @@ export default function ResultsTable({ departments, municipalities }: Props) {
                   <td className="px-3 py-2.5 text-right text-red-600 font-medium">{formatNumber(row.espriella)}</td>
                   <td className="px-3 py-2.5 text-right text-green-600 hidden xl:table-cell">{formatNumber(row.valencia)}</td>
                   <td className="px-3 py-2.5 text-right text-violet-600 hidden xl:table-cell">{formatNumber(row.fajardo)}</td>
+                  <td className="px-3 py-2.5 text-right hidden xl:table-cell">
+                    <span className="text-xs font-medium text-blue-600">{formatNumber(row.mesasCepeda)}</span>
+                    {row.mesasTotal > 0 && <span className="text-xs text-gray-400">/{formatNumber(row.mesasTotal)}</span>}
+                  </td>
+                  <td className="px-3 py-2.5 text-right hidden xl:table-cell">
+                    <span className="text-xs font-medium text-red-600">{formatNumber(row.mesasEspriella)}</span>
+                    {row.mesasTotal > 0 && <span className="text-xs text-gray-400">/{formatNumber(row.mesasTotal)}</span>}
+                  </td>
                   <td className="px-3 py-2.5 text-right">
                     <MarginBadge winner={row.winner} marginPct={row.marginPct} />
                   </td>
@@ -304,6 +334,14 @@ export default function ResultsTable({ departments, municipalities }: Props) {
                   <td className="px-3 py-2.5 text-right text-red-600 font-medium">{formatNumber(row.espriella)}</td>
                   <td className="px-3 py-2.5 text-right text-green-600 hidden xl:table-cell">{formatNumber(row.valencia)}</td>
                   <td className="px-3 py-2.5 text-right text-violet-600 hidden xl:table-cell">{formatNumber(row.fajardo)}</td>
+                  <td className="px-3 py-2.5 text-right hidden xl:table-cell">
+                    <span className="text-xs font-medium text-blue-600">{formatNumber(row.mesasCepeda)}</span>
+                    {row.mesasTotal > 0 && <span className="text-xs text-gray-400">/{formatNumber(row.mesasTotal)}</span>}
+                  </td>
+                  <td className="px-3 py-2.5 text-right hidden xl:table-cell">
+                    <span className="text-xs font-medium text-red-600">{formatNumber(row.mesasEspriella)}</span>
+                    {row.mesasTotal > 0 && <span className="text-xs text-gray-400">/{formatNumber(row.mesasTotal)}</span>}
+                  </td>
                   <td className="px-3 py-2.5 text-right">
                     <MarginBadge winner={row.winner} marginPct={row.marginPct} />
                   </td>

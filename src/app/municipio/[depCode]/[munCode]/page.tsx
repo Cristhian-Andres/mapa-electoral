@@ -6,6 +6,7 @@ import CandidateComparison from '@/components/dashboard/CandidateComparison'
 import ParticipationCard from '@/components/dashboard/ParticipationCard'
 import VoteDonut from '@/components/dashboard/VoteDonut'
 import StatCard from '@/components/ui/StatCard'
+import PuestosTable from '@/components/dashboard/PuestosTable'
 import { formatNumber, formatPct } from '@/lib/utils'
 import type { CandidateResult } from '@/types'
 
@@ -30,6 +31,7 @@ export default async function MunicipalityPage({ params }: Props) {
     where: { departmentCode_municipalityCode: { departmentCode: deptCode, municipalityCode: munCode } },
     include: {
       candidateResults: { orderBy: { votes: 'desc' } },
+      puestoResults:    { orderBy: { totalVotes: 'desc' } },
       department: { select: { name: true, code: true } },
     },
   })
@@ -228,6 +230,30 @@ export default async function MunicipalityPage({ params }: Props) {
           </div>
         </div>
       </div>
+
+      {/* Puestos de Votación */}
+      {mun.puestoResults.length > 0 && (
+        <div className="mt-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-gray-900 font-semibold text-lg flex items-center gap-2">
+              <MapPin className="w-5 h-5 text-gray-400" />
+              Puestos de Votación
+            </h2>
+            <div className="flex items-center gap-4 text-xs text-gray-500">
+              <span className="flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-blue-500 inline-block" />
+                Mesas Cepeda: <strong className="text-blue-600 ml-0.5">{formatNumber(mun.mesasCepeda)}</strong>
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-red-500 inline-block" />
+                Mesas Espriella: <strong className="text-red-600 ml-0.5">{formatNumber(mun.mesasEspriella)}</strong>
+              </span>
+              <span className="text-gray-400">de {formatNumber(mun.mesasTotal)} totales</span>
+            </div>
+          </div>
+          <PuestosTable puestos={mun.puestoResults} />
+        </div>
+      )}
 
       {/* Social share */}
       <div className="mt-6 bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
