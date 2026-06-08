@@ -60,6 +60,8 @@ export default function Footer() {
           <p className="text-sm text-gray-500">
             By{' '}
             <span className="text-gray-900 font-semibold">Cristian Luna</span>
+            {' · '}
+            <span className="text-gray-700 font-medium">Team Cauca</span>
           </p>
         </div>
       </div>
