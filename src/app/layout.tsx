@@ -26,7 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main className="flex-1">{children}</main>
         <Footer />
       </body>
-      <GoogleAnalytics gaId="G-397057395" />
+      <GoogleAnalytics gaId="G-M1WKESRQPH" />
     </html>
   )
 }
